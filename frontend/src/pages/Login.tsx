@@ -13,14 +13,17 @@ export default function Login() {
     const [message, setMessage] = useState<string >('');
 
     const initialValues: LoginFormData = {username: '', password: '',};
-
-    useEffect(()=>{
+    function handleRedirect (){
         const jwtToken = localStorage.getItem('token');
         console.log(jwtToken);
 
         if(jwtToken){
             navigate('/');
         }
+    }
+
+    useEffect(()=>{
+        handleRedirect()
     }, [])
 
     async function handleLogin(data:LoginFormData){
@@ -40,6 +43,7 @@ export default function Login() {
                 console.log(jwt);
                 localStorage.setItem('token', jwt.token);
                 setMessage('Logged In successfully!');
+                handleRedirect();
             } else{
                 setMessage(`Login Failed: ${response.status} - ${response.data.message}`);
             }

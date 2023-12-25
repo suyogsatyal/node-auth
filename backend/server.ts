@@ -165,7 +165,7 @@ app.get('/user/:uName', (req: any, res: any) => {
 
 app.post('/login', async (req: any, res: any) => {
     try {
-        const loginAttempt: LoginFormData = { username: "suyog", password: "satyal" };
+        const loginAttempt: LoginFormData = req.body;
         const userDetailURL = 'http://localhost:3000/user/' + loginAttempt.username;
         const userResponse = await axios.get(userDetailURL);
         const credentials = userResponse.data.data;
