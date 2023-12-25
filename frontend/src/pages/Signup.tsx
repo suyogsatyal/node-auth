@@ -1,44 +1,58 @@
 import '../index.css'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { SignupFormData, LoginFormData } from '../../../utils/interface';
+import { SignupFormData, LoginFormData, ApiResponse } from '../../../utils/interface';
 import { signupSchema } from '../../../utils/schema';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router';
 import axios from 'axios';
 
 export default function Signup() {
     const apiURL = import.meta.env.VITE_APP_API_BASE_URL;
     const userSignupURL  = apiURL+'/signup';
     const [message, setMessage] = useState<string >('');
+    const navigate = useNavigate();
+
+    useEffect(()=>{
+      const jwtToken = localStorage.getItem('token');
+      console.log(jwtToken);
+
+      if(jwtToken){
+          navigate('/');
+      }
+  }, [])
 
     const initialValues: SignupFormData = { username: '', password: '', confirmPassword: '' };
 
     async function handleSignup(data: SignupFormData) {
-        const Credentials: LoginFormData = {username: data.username, password: data.password};
-        console.log(Credentials);
-
+        const Credentials: LoginFormData = { username: data.username, password: data.password };
         try {
-            const response = await axios.post(userSignupURL, Credentials, {
+          const response = await axios.post<ApiResponse>(
+            userSignupURL,
+            Credentials,
+            {
               headers: {
                 'Content-Type': 'application/json',
               },
-            });
-          
-            if (response.status >= 200 && response.status < 300) {
-              console.log('Data received and saved successfully!');
-              setMessage('Data received and saved successfully!');
-            } else {
-              console.error(`Signup Failed: ${response.status} - ${response.data.message}`);
-              setMessage(`Signup Failed: ${response.status} - ${response.data.message}`);
             }
-          } catch (error: any) {
-            console.error('Error submitting form:', error);
-            setMessage(`Signup Failed: ${error.response.data.error}`);
+          );
+      
+          if (response.data.success) {
+            setMessage(response.data.message || 'Signup successful');
+          } else {
+            setMessage(`Signup Failed: ${response.status} - ${response.data.message}`);
           }
-    }
+        } catch (error:any) {
+          const errorResponse: ApiResponse = {
+            success: false,
+            status: error.response ? error.response.status : 500,
+            message: error.response ? error.response.data.message : 'Internal Server Error',
+          };
+      
+          setMessage(`Signup Failed: ${errorResponse.status} - ${errorResponse.message}`);
+        }
+      }
+      
 
-    useEffect(()=>{
-        console.log(userSignupURL)
-    }, [Field])
     return (
         <>
             <div className="flex flex-col justify-center items-center w-lvw overflow-hidden">

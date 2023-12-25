@@ -1,12 +1,52 @@
 import '../index.css'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { LoginFormData } from '../../../utils/interface';
+import { ApiResponse, LoginFormData } from '../../../utils/interface';
 import { loginSchema } from '../../../utils/schema';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router';
 
 export default function Login() {
+    const apiURL = import.meta.env.VITE_APP_API_BASE_URL;
+    const userLoginURL  = apiURL+'/login';
+    const navigate = useNavigate();
+    const [message, setMessage] = useState<string >('');
+
     const initialValues: LoginFormData = {username: '', password: '',};
-    function handleLogin(data:LoginFormData){
-        console.log(data);
+
+    useEffect(()=>{
+        const jwtToken = localStorage.getItem('token');
+        console.log(jwtToken);
+
+        if(jwtToken){
+            navigate('/');
+        }
+    }, [])
+
+    async function handleLogin(data:LoginFormData){
+        const Credentials: LoginFormData = {username: data.username, password: data.password};
+        console.log(Credentials);
+
+        try{
+            const response = await axios.post<ApiResponse>(userLoginURL, Credentials,{
+                headers:{
+                    'Content-Type': 'application/json',
+                },
+            })
+
+            if(response.status >= 200 && response.status < 300){
+                console.log('Logged In successfuly!');
+                const jwt = response.data.data;
+                console.log(jwt);
+                localStorage.setItem('token', jwt.token);
+                setMessage('Logged In successfully!');
+            } else{
+                setMessage(`Login Failed: ${response.status} - ${response.data.message}`);
+            }
+        } catch(error:any){
+            console.error('Error logging in:', error);
+            setMessage(`Login Failed: ${error.response.data.error}`)
+        }
     }
     return (
         <>
@@ -24,7 +64,7 @@ export default function Login() {
                     <label htmlFor="password" className='absolute left-0 p-3 ml-2 pointer-events-none duration-200 ease-in-out text-slate-300'>Password</label>
                     <ErrorMessage name='password' component="div" className=' text-red-600'></ErrorMessage>
                 </div>
-
+                {message && (message.toLowerCase().includes("error")||message.toLowerCase().includes("failed"))?(<div className='p-2 text-center text-red-600'>{message}</div>): (<div className='p-2 text-center text-green-600'>{message}</div>)}
                 <button type='submit' className="relative group cursor-pointer text-sky-50  overflow-hidden h-12 w-64 rounded-md bg-sky-900 p-2 flex justify-center items-center font-extrabold">
                     <div className="absolute top-3 right-20 group-hover:top-12 group-hover:-right-12 z-10 w-40 h-40 rounded-full group-hover:scale-150 group-hover:opacity-50 duration-500 bg-sky-950"></div>
                     <div className="absolute top-3 right-20 group-hover:top-12 group-hover:-right-12 z-10 w-32 h-32 rounded-full group-hover:scale-150 group-hover:opacity-50 duration-500 bg-sky-900"></div>
