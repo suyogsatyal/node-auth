@@ -38,7 +38,6 @@ function App() {
   }
   useEffect(() => {
     jwtToken = localStorage.getItem('token');
-
     if (!jwtToken) {
       navigate('/login');
     }
@@ -50,8 +49,8 @@ function App() {
   return (
     <>
       <Navbar></Navbar>
-      <div className="container">
-        Hello
+      <div className="container pt-16">
+        <div className='pt-64'>hello</div>
       </div>
     </>
   )

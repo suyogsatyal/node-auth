@@ -15,7 +15,7 @@ export default function Navbar() {
     <div className=" absolute w-full bg-slate-800 border-b-[1px] border-gray-400 flex p-7">
       <div className="container">
         <nav className="flex-row content-between">
-          <div>Hello {currentUser.username}</div>
+          {currentUser&& <div>Hello {currentUser.username}</div>}
           <div onClick={handleLogout}>Logout</div>
         </nav>
       </div>
