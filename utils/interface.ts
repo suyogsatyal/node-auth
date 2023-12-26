@@ -1,4 +1,3 @@
-// utils/interfaces.ts
 export interface LoginFormData {
     username: string;
     password: string;
@@ -10,8 +9,16 @@ export interface SignupFormData {
     confirmPassword: string;
 }
 
+export interface AuthContextType {
+    currentUser: UsersTable | null;
+    setCurrentUser: React.Dispatch<React.SetStateAction<UsersTable|null>>;
+}
+
+export interface User {
+    username: string;
+};
+
 export interface UsersTable {
-    userId: number | null;
     username: string;
     passwordHash: string;
     adminAccess: number;
