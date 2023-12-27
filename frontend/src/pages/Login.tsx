@@ -60,7 +60,7 @@ export default function Login() {
         <>
             <div className="flex flex-col justify-center items-center w-lvw overflow-hidden">
                 <Formik initialValues={initialValues} validationSchema={loginSchema} onSubmit={values => handleLogin(values)}>
-                    <Form className=' border-2 py-12 px-8 text-center' noValidate>
+                    <Form className=' border-2 py-12 px-8 flex flex-col text-center items-center self-center justify-center' noValidate>
                         <h1 className=' text-3xl py-6 capitalize'>Login Form</h1>
                         <div className="inputGroup mx-0 my-4 w-64 relative">
                             <Field name="username" type="text" className=' p-3 outline-none border-2 border-gray-400 bg-transparent rounded-lg w-full' required autoComplete='off' />
