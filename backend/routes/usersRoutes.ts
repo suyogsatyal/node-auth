@@ -37,6 +37,20 @@ usersRouter.get('/users', (_req: any, res: any) => {
     })
 })
 
+usersRouter.get('/admins', (_req: any, res: any) => {
+    const sql = 'SELECT username FROM users WHERE admin_access = 1';
+
+    db.all(sql, [], (err: any, rows: User[]) => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+
+        let details = { users: rows };
+
+        res.json(details);
+    })
+})
+
 usersRouter.get('/user/:uName', (req: any, res: any) => {
     const username = req.params.uName;
 

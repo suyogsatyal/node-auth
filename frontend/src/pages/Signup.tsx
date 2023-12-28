@@ -58,7 +58,7 @@ export default function Signup() {
             <div className="flex flex-col justify-center items-center w-lvw overflow-hidden">
                 <Formik initialValues={initialValues} validationSchema={signupSchema} onSubmit={values => handleSignup(values)}>
                     <Form action="" className=' border-2 py-12 px-8 flex flex-col text-center items-center self-center justify-center' noValidate>
-                        <h1 className=' text-3xl py-6 capitalize'>Signup Form</h1>
+                        <h1 className=' text-3xl py-6 lato capitalize'>Signup Form</h1>
                         <div className="inputGroup mx-0 my-4 w-64 relative">
                             <Field name="username" type="text" onKeyUp={(e: React.KeyboardEvent<HTMLInputElement>) => e.keyCode !== 13 && setMessage('')} className=' p-3 outline-none border-2 border-gray-400 bg-transparent rounded-lg w-full' required autoComplete='off' />
                             <label htmlFor="name" className='absolute left-0 p-3 ml-2 pointer-events-none duration-200 ease-in-out text-slate-300'>Username</label>

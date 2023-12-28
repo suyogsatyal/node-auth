@@ -3,7 +3,7 @@ const authRouter = express.Router();
 import { LoginFormData, ApiResponse, User } from '../../utils/interface';
 const axios = require('axios');
 const sqlite3 = require('sqlite3');
-const path =  require('path');
+const path = require('path');
 const bcrypt = require('bcryptjs');
 const dbPath = path.join(__dirname, '../../db', 'database.db')
 const db = new sqlite3.Database(dbPath);
@@ -95,11 +95,11 @@ authRouter.post('/login', async (req: any, res: any) => {
             const successResponse: ApiResponse = {
                 success: true,
                 status: 200,
-                data: {token, userDetails}
+                data: { token, userDetails }
             };
             return res.status(successResponse.status).json(successResponse);
         }
-        else{
+        else {
             const errorResponse: ApiResponse = {
                 success: false,
                 status: 401,
@@ -121,10 +121,58 @@ authRouter.post('/login', async (req: any, res: any) => {
 
 })
 
+authRouter.post('/isAdmin', async (req: any, res: any) => {
+    const adminsList: any = await axios.get('http://localhost:3000/admins');
+    try {
+        const data: any = req.body;
+        const decoded = jwt.decode(data.token);
+        if (!decoded || !decoded.username) {
+            // If decoding fails or username is missing, return an error response
+            const errorResponse: ApiResponse = {
+                success: false,
+                status: 401,
+                message: 'Invalid token',
+            };
+            console.error(errorResponse)
+            return res.status(errorResponse.status).json(errorResponse);
+        }
+        else {
+            const userList: User[] = adminsList.data.users;
 
-authRouter.post('/relogin', async (req:any, res:any) =>{
-    try{
-        const currentToken:string = req.body.token;
+            // Check if the username already exists
+            const isAdmin = userList.some((user) => user.username === decoded.username);
+
+            if(!isAdmin){
+                const errorResponse: ApiResponse = {
+                    success: false,
+                    status: 404,
+                    message: 'Admin not found',
+                };
+                console.error(errorResponse)
+                return res.status(errorResponse.status).json(errorResponse);
+            }else{
+                const successResponse: ApiResponse = {
+                    success: true,
+                    status: 200,
+                    data: {isAdmin: true}
+                }
+                return res.status(successResponse.status).json(successResponse)
+            }
+        }
+    } catch (error: any) {
+        console.error(error);
+        const errorResponse: ApiResponse = {
+            success: false,
+            status: 500,
+            message: 'Internal Server Error',
+        };
+        return res.status(errorResponse.status).json(errorResponse);
+    }
+})
+
+authRouter.post('/relogin', async (req: any, res: any) => {
+    try {
+        const currentToken: string = req.body.token;
         // const currentToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InN1eW9nIiwiaWF0IjoxNzAzNjA2OTU0LCJleHAiOjE3MDM2MTA1NTR9.s2IXaTiQPISo7Li3XSFX8YyrQFNk4gVNumOujVHUw9E"
         if (!currentToken) {
             // If token is missing, return an error response
@@ -151,13 +199,12 @@ authRouter.post('/relogin', async (req:any, res:any) =>{
         const userDetailURL = 'http://localhost:3000/user/' + decoded.username;
         const userResponse = await axios.get(userDetailURL);
         const userDetails = userResponse.data.data;
-        if(userResponse.data.success){
+        if (userResponse.data.success) {
             const successResponse: ApiResponse = {
                 success: true,
                 status: 200,
                 data: userResponse.data.data
             };
-            console.log(successResponse)
             return res.status(successResponse.status).json(successResponse);
         }
     }

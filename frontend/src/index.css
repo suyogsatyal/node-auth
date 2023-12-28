@@ -8,6 +8,15 @@
     box-sizing: border-box;
 }
 
+@font-face {
+    font-family: Lato;
+    src: url(../src/components/assets/Lato.ttf);
+}
+
+.lato{
+    font-family: Lato;
+}
+
 .inputGroup :is(input:focus, input:valid)~label {
     transform: translateY(-50%) scale(.9);
     margin: 0em;
