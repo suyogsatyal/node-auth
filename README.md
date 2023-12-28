@@ -21,3 +21,33 @@ Open a new terminal window, navigate to the project directory, and run the follo
 ```bash
 npm run backend
 ```
+
+## Folder Structure
+Folder Structure of the project so far
+```
+.node-auth
+├── backend
+|   ├── routes
+|   |   ├── authRoutes.ts
+|   |   └── usersRoutes.ts
+|   ├── .env
+|   └── server.ts
+├── db
+|   └── database.db
+├── frontend
+|   ├── src
+|   |   ├── components
+|   |   |   └── Context.tsx
+|   |   |       └── Navbar.tsx
+|   |   ├── pages
+|   |   |   ├── Login.tsx
+|   |   |   └── Signup.tsx
+|   |   ├── App.tsx
+|   |   ├── index.css
+|   |   └── main.tsx
+|   ├── .env
+|   └── index.html
+└── utils
+    ├── interface.ts
+    └── schema.ts
+```
