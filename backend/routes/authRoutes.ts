@@ -33,7 +33,7 @@ authRouter.post('/signup', async (req: any, res: any) => {
                 status: 400,
                 message: 'Username already exists',
             };
-
+            console.log(errorResponse)
             return res.status(errorResponse.status).json(errorResponse);
         } else {
             // Username is unique, proceed with user creation
@@ -50,7 +50,7 @@ authRouter.post('/signup', async (req: any, res: any) => {
             // Insert new user into the database
             db.run(insertUserSql, params, function (this: any, err: any) {
                 if (err) {
-                    console.error(`Error: ${err}`);
+                    console.error(`*****\nError: ${err}`);
                     const errorResponse: ApiResponse = {
                         success: false,
                         status: 500,
@@ -86,12 +86,10 @@ authRouter.post('/login', async (req: any, res: any) => {
         const userDetailURL = 'http://localhost:3000/user/' + loginAttempt.username;
         const userResponse = await axios.get(userDetailURL);
         const userDetails = userResponse.data.data;
-        // console.log(userDetails);
         const userData: LoginFormData = { username: userDetails.username, password: userDetails.password_hash };
 
         const correctPassword: boolean = bcrypt.compareSync(loginAttempt.password, userData.password);
 
-        console.log(jwtSecret)
         if (correctPassword) {
             const token = jwt.sign({ username: userData.username }, jwtSecret, { expiresIn: '1h' });
             const successResponse: ApiResponse = {
@@ -112,12 +110,12 @@ authRouter.post('/login', async (req: any, res: any) => {
         }
     } catch (error: any) {
         console.log("Didn't work");
+        console.error(error)
         const errorResponse: ApiResponse = {
             success: false,
             status: 500,
             message: 'Internal Server Error'
         };
-        console.log(errorResponse)
         return res.status(errorResponse.status).json(errorResponse);
     }
 
@@ -135,6 +133,7 @@ authRouter.post('/relogin', async (req:any, res:any) =>{
                 status: 400,
                 message: 'Token is missing',
             };
+            console.log(errorResponse);
             return res.status(errorResponse.status).json(errorResponse);
         }
 
@@ -146,12 +145,12 @@ authRouter.post('/relogin', async (req:any, res:any) =>{
                 status: 401,
                 message: 'Invalid token',
             };
+            console.error(errorResponse)
             return res.status(errorResponse.status).json(errorResponse);
         }
         const userDetailURL = 'http://localhost:3000/user/' + decoded.username;
         const userResponse = await axios.get(userDetailURL);
         const userDetails = userResponse.data.data;
-        console.log(userDetails);
         if(userResponse.data.success){
             const successResponse: ApiResponse = {
                 success: true,
@@ -163,7 +162,7 @@ authRouter.post('/relogin', async (req:any, res:any) =>{
         }
     }
     catch (error: any) {
-        console.log("Didn't work");
+        console.error(error);
         const errorResponse: ApiResponse = {
             success: false,
             status: 500,
