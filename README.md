@@ -1,6 +1,6 @@
 # Node Authentication Project [node-auth]
 
-Welcome to the Node Authentication Project documentation. This project provides a secure authentication system using Node.js, Express.js, and React.js.
+Welcome to the Node Authentication Project documentation. This project provides a secure authentication system using Node.js, Express.js, and React.js. 
 
 ## Quick Start
 
