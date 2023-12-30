@@ -91,7 +91,12 @@ authRouter.post('/login', async (req: any, res: any) => {
         const correctPassword: boolean = bcrypt.compareSync(loginAttempt.password, userData.password);
 
         if (correctPassword) {
-            const token = jwt.sign({ username: userData.username }, jwtSecret, { expiresIn: '1h' });
+            const isAdmin = userDetails ? userDetails.admin_access === 1 : false;
+            const isContributor = userDetails ? userDetails.contributor_access === 1 : false;
+            const isViewer = userDetails ? userDetails.viewer_access === 1 : false;
+            const tokenData = { username: userData.username, isAdmin, isContributor, isViewer }
+            console.log(tokenData);
+            const token = jwt.sign(tokenData, jwtSecret, { expiresIn: '1h' });
             const successResponse: ApiResponse = {
                 success: true,
                 status: 200,
@@ -122,7 +127,6 @@ authRouter.post('/login', async (req: any, res: any) => {
 })
 
 authRouter.post('/isAdmin', async (req: any, res: any) => {
-    const adminsList: any = await axios.get('http://localhost:3000/admins');
     try {
         const data: any = req.body;
         const decoded = jwt.decode(data.token);
@@ -137,24 +141,24 @@ authRouter.post('/isAdmin', async (req: any, res: any) => {
             return res.status(errorResponse.status).json(errorResponse);
         }
         else {
-            const userList: User[] = adminsList.data.users;
+            // const userList: User[] = adminsList.data.users;
 
             // Check if the username already exists
-            const isAdmin = userList.some((user) => user.username === decoded.username);
+            const isAdmin = decoded.isAdmin;
 
-            if(!isAdmin){
+            if (!isAdmin) {
                 const errorResponse: ApiResponse = {
                     success: false,
-                    status: 404,
-                    message: 'Admin not found',
+                    status: 403,
+                    message: 'Forbidden Route | Not Authorized for Non-Admins',
                 };
                 console.error(errorResponse)
                 return res.status(errorResponse.status).json(errorResponse);
-            }else{
+            } else {
                 const successResponse: ApiResponse = {
                     success: true,
                     status: 200,
-                    data: {isAdmin: true}
+                    data: { isAdmin: true }
                 }
                 return res.status(successResponse.status).json(successResponse)
             }
