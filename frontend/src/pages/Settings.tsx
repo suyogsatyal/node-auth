@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { AuthContext } from '../components/Context';
 import { ApiResponse } from '../../../utils/interface';
 import Navbar from '../components/Navbar'
-import axios from 'axios';
+import axiosInstance from '../components/AxiosInstance';
 
 function Settings() {
   const apiURL = import.meta.env.VITE_APP_API_BASE_URL;
@@ -11,17 +11,10 @@ function Settings() {
   const navigate = useNavigate();
   const userContext = useContext(AuthContext);
   const user = userContext.currentUser;
-  let jwtToken: string | null;
 
   async function handleRelogin() {
-    let token = { token: jwtToken }
     try {
-      const response = await axios.post<ApiResponse>(reloginApiURL, token,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
+      const response = await axiosInstance.post<ApiResponse>(reloginApiURL)
 
       if (response.data.success) {
         userContext.setCurrentUser(response.data.data)
@@ -37,20 +30,19 @@ function Settings() {
     }
   }
   useEffect(() => {
-    jwtToken = localStorage.getItem('token');
-    if (!jwtToken) {
-      navigate('/login');
-    }
-    else if (user == null) {
-      handleRelogin();
-    }
-  }, [])
+    handleRelogin();
+  },)
 
   return (
     <>
       <Navbar></Navbar>
       <div className="container pt-28">
         <div className='text-center lato text-5xl'>Settings</div>
+        <ul>
+          <li>Username:{user && user.username} <a href="/changeUsername">Change Username</a></li>
+          <li>Password:<a href="/changePassword">Change Username</a></li>
+          <li>Bio: <a href="/changeBio">Change Username</a></li>
+        </ul>
       </div>
     </>
   )

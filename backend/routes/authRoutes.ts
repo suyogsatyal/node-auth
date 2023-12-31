@@ -9,14 +9,19 @@ const dbPath = path.join(__dirname, '../../db', 'database.db')
 const db = new sqlite3.Database(dbPath);
 const jwt = require('jsonwebtoken');
 const jwtSecret = process.env.JWT_SECRET;
+const backendURL = process.env.REACT_APP_BACKEND_URL;
+
+const authenticateToken = require('../middlewares/authMiddleware')
+const authenticateAdmin = require('../middlewares/authMiddleware')
 
 authRouter.post('/signup', async (req: any, res: any) => {
+    console.log("try")
     try {
         const newUser: LoginFormData = req.body;
 
         // Fetch user data and admin count from external API
-        const usersResponse = await axios.get('http://localhost:3000/users');
-        const countResponse = await axios.get('http://localhost:3000/count');
+        const usersResponse = await axios.get(backendURL + '/users');
+        const countResponse = await axios.get(backendURL + '/count');
 
         const adminsCount: number = countResponse.data.admins;
         const userList: User[] = usersResponse.data.users;
@@ -79,11 +84,10 @@ authRouter.post('/signup', async (req: any, res: any) => {
     }
 });
 
-
 authRouter.post('/login', async (req: any, res: any) => {
     try {
         const loginAttempt: LoginFormData = req.body;
-        const userDetailURL = 'http://localhost:3000/user/' + loginAttempt.username;
+        const userDetailURL = backendURL + '/user/' + loginAttempt.username;
         const userResponse = await axios.get(userDetailURL);
         const userDetails = userResponse.data.data;
         const userData: LoginFormData = { username: userDetails.username, password: userDetails.password_hash };
@@ -95,7 +99,6 @@ authRouter.post('/login', async (req: any, res: any) => {
             const isContributor = userDetails ? userDetails.contributor_access === 1 : false;
             const isViewer = userDetails ? userDetails.viewer_access === 1 : false;
             const tokenData = { username: userData.username, isAdmin, isContributor, isViewer }
-            console.log(tokenData);
             const token = jwt.sign(tokenData, jwtSecret, { expiresIn: '1h' });
             const successResponse: ApiResponse = {
                 success: true,
@@ -114,7 +117,6 @@ authRouter.post('/login', async (req: any, res: any) => {
             return res.status(errorResponse.status).json(errorResponse);
         }
     } catch (error: any) {
-        console.log("Didn't work");
         console.error(error)
         const errorResponse: ApiResponse = {
             success: false,
@@ -126,44 +128,20 @@ authRouter.post('/login', async (req: any, res: any) => {
 
 })
 
-authRouter.post('/isAdmin', async (req: any, res: any) => {
+authRouter.post('/isAdmin', authenticateToken, async (req: any, res: any) => {
     try {
-        const data: any = req.body;
-        const decoded = jwt.decode(data.token);
-        if (!decoded || !decoded.username) {
-            // If decoding fails or username is missing, return an error response
-            const errorResponse: ApiResponse = {
-                success: false,
-                status: 401,
-                message: 'Invalid token',
-            };
-            console.error(errorResponse)
-            return res.status(errorResponse.status).json(errorResponse);
-        }
-        else {
-            // const userList: User[] = adminsList.data.users;
-
-            // Check if the username already exists
-            const isAdmin = decoded.isAdmin;
-
-            if (!isAdmin) {
-                const errorResponse: ApiResponse = {
-                    success: false,
-                    status: 403,
-                    message: 'Forbidden Route | Not Authorized for Non-Admins',
-                };
-                console.error(errorResponse)
-                return res.status(errorResponse.status).json(errorResponse);
-            } else {
-                const successResponse: ApiResponse = {
-                    success: true,
-                    status: 200,
-                    data: { isAdmin: true }
-                }
-                return res.status(successResponse.status).json(successResponse)
+        const decoded = res.locals.user;
+        // const userDetails = userResponse.data.data;
+        if (decoded.isAdmin)  {
+            const successResponse: ApiResponse = {
+                success: true,
+                status: 200,
+                data: {isAdmin: true}
             }
+            return res.status(successResponse.status).json(successResponse)
         }
-    } catch (error: any) {
+    }
+    catch (error: any) {
         console.error(error);
         const errorResponse: ApiResponse = {
             success: false,
@@ -174,40 +152,17 @@ authRouter.post('/isAdmin', async (req: any, res: any) => {
     }
 })
 
-authRouter.post('/relogin', async (req: any, res: any) => {
+authRouter.post('/relogin', authenticateToken, async (_req: any, res: any) => {
     try {
-        const currentToken: string = req.body.token;
-        // const currentToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InN1eW9nIiwiaWF0IjoxNzAzNjA2OTU0LCJleHAiOjE3MDM2MTA1NTR9.s2IXaTiQPISo7Li3XSFX8YyrQFNk4gVNumOujVHUw9E"
-        if (!currentToken) {
-            // If token is missing, return an error response
-            const errorResponse: ApiResponse = {
-                success: false,
-                status: 400,
-                message: 'Token is missing',
-            };
-            console.log(errorResponse);
-            return res.status(errorResponse.status).json(errorResponse);
-        }
-
-        const decoded = jwt.decode(currentToken);
-        if (!decoded || !decoded.username) {
-            // If decoding fails or username is missing, return an error response
-            const errorResponse: ApiResponse = {
-                success: false,
-                status: 401,
-                message: 'Invalid token',
-            };
-            console.error(errorResponse)
-            return res.status(errorResponse.status).json(errorResponse);
-        }
-        const userDetailURL = 'http://localhost:3000/user/' + decoded.username;
+        const decoded = res.locals.user;
+        const userDetailURL = backendURL + '/user/' + decoded.username;
         const userResponse = await axios.get(userDetailURL);
         const userDetails = userResponse.data.data;
         if (userResponse.data.success) {
             const successResponse: ApiResponse = {
                 success: true,
                 status: 200,
-                data: userResponse.data.data
+                data: userDetails
             };
             return res.status(successResponse.status).json(successResponse);
         }

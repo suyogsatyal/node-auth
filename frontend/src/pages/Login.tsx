@@ -7,10 +7,12 @@ import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
 
+
 export default function Login() {
     const apiURL = import.meta.env.VITE_APP_API_BASE_URL;
     const timeout = 1000;
     const userLoginURL = apiURL + '/login';
+    console.log(userLoginURL)
     const navigate = useNavigate();
     const [message, setMessage] = useState<string>('');
 
@@ -26,7 +28,7 @@ export default function Login() {
 
     useEffect(() => {
         handleRedirect()
-    }, [])
+    },)
 
     async function handleLogin(data: LoginFormData) {
         const Credentials: LoginFormData = { username: data.username, password: data.password };

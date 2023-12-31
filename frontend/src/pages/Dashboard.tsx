@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { AuthContext } from '../components/Context';
 import { ApiResponse } from '../../../utils/interface';
 import Navbar from '../components/Navbar'
-import axios from 'axios';
+import axiosInstance from '../components/AxiosInstance';
 
 function Dashboard() {
     const apiURL = import.meta.env.VITE_APP_API_BASE_URL;
@@ -11,20 +11,15 @@ function Dashboard() {
     const adminValidationURL = apiURL + '/isAdmin';
     const navigate = useNavigate();
     const userContext = useContext(AuthContext);
-    const user = userContext.currentUser;
+    // const user = userContext.currentUser;
     let jwtToken: string | null;
 
     async function handleRelogin() {
-        let token = { token: jwtToken }
+        // const token = { token: jwtToken }
         console.log(adminValidationURL)
 
         try {
-            const response = await axios.post<ApiResponse>(reloginApiURL, token,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                })
+            const response = await axiosInstance.post<ApiResponse>(reloginApiURL)
 
             if (response.data.success) {
                 userContext.setCurrentUser(response.data.data)
@@ -41,10 +36,10 @@ function Dashboard() {
     }
 
     async function AdminValidation() {
-        let token = { token: jwtToken }
+        const token = { token: jwtToken }
         
         try {
-            const adminResponse = await axios.post<ApiResponse>(adminValidationURL, token,
+            const adminResponse = await axiosInstance.post<ApiResponse>(adminValidationURL, token,
                 {
                     headers: {
                         'Content-Type': 'application/json',
@@ -58,14 +53,10 @@ function Dashboard() {
         }
     }
     useEffect(() => {
-        jwtToken = localStorage.getItem('token');
-        if (!jwtToken) {
-            navigate('/login');
-        }
-        else if (user == null) {
+        
             handleRelogin();
             AdminValidation();
-        }
+
     }, [])
 
     return (
