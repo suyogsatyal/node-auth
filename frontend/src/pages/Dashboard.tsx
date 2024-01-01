@@ -8,15 +8,13 @@ import axiosInstance from '../components/AxiosInstance';
 function Dashboard() {
     const apiURL = import.meta.env.VITE_APP_API_BASE_URL;
     const reloginApiURL = apiURL + '/relogin';
-    const adminValidationURL = apiURL + '/isAdmin';
+    const dashboardDataURL = apiURL + '/dashboard';
     const navigate = useNavigate();
     const userContext = useContext(AuthContext);
     // const user = userContext.currentUser;
-    let jwtToken: string | null;
 
     async function handleRelogin() {
         // const token = { token: jwtToken }
-        console.log(adminValidationURL)
 
         try {
             const response = await axiosInstance.post<ApiResponse>(reloginApiURL)
@@ -36,15 +34,8 @@ function Dashboard() {
     }
 
     async function AdminValidation() {
-        const token = { token: jwtToken }
-        
         try {
-            const adminResponse = await axiosInstance.post<ApiResponse>(adminValidationURL, token,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                })
+            const adminResponse = await axiosInstance.post<ApiResponse>(dashboardDataURL)
             console.log(adminResponse.data.data)
         }
         catch (error) {
@@ -53,11 +44,9 @@ function Dashboard() {
         }
     }
     useEffect(() => {
-        
             handleRelogin();
             AdminValidation();
-
-    }, [])
+    },[])
 
     return (
         <>

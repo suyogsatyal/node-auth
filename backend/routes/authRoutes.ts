@@ -1,5 +1,6 @@
 const express = require('express');
 const authRouter = express.Router();
+import { error } from 'console';
 import { LoginFormData, ApiResponse, User } from '../../utils/interface';
 const axios = require('axios');
 const sqlite3 = require('sqlite3');
@@ -128,17 +129,29 @@ authRouter.post('/login', async (req: any, res: any) => {
 
 })
 
-authRouter.post('/isAdmin', authenticateToken, async (req: any, res: any) => {
+authRouter.post('/dashboard', authenticateToken, async (req: any, res: any) => {
     try {
         const decoded = res.locals.user;
-        // const userDetails = userResponse.data.data;
-        if (decoded.isAdmin)  {
+
+        if (decoded.isAdmin) {
+            // const adminData = await axios.get(backendURL + '/admins');
+            // const contributorData = await axios.get(backendURL + '/contributors')
+            // const usersData = await axios.get(backendURL + '/users');
             const successResponse: ApiResponse = {
                 success: true,
                 status: 200,
-                data: {isAdmin: true}
+                data: { isAdmin: true }
             }
             return res.status(successResponse.status).json(successResponse)
+        }
+        else {
+            const errorResponse: ApiResponse = {
+                success: false,
+                status: 401,
+                message: 'Unauthorized Access to Admin Only Endpoints',
+            };
+            console.error(errorResponse);
+            return res.status(errorResponse.status).json(errorResponse);
         }
     }
     catch (error: any) {
