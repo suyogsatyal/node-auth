@@ -134,13 +134,12 @@ authRouter.post('/dashboard', authenticateToken, async (req: any, res: any) => {
         const decoded = res.locals.user;
 
         if (decoded.isAdmin) {
-            // const adminData = await axios.get(backendURL + '/adminsData');
-            // const contributorData = await axios.get(backendURL + '/contributorsData')
-            // const viewersData = await axios.get(backendURL + '/viewersData');
+            const response = await axios.get(backendURL + '/allData');
+            const dashboardData = response.data.data;
             const successResponse: ApiResponse = {
                 success: true,
                 status: 200,
-                data: { isAdmin: true }
+                data: dashboardData
             }
             return res.status(successResponse.status).json(successResponse)
         }

@@ -85,8 +85,8 @@ usersRouter.get('/user/:uName', (req: any, res: any) => {
     });
 })
 
-usersRouter.get('/adminsData', (_req: any, res: any) => {
-    const sql = 'SELECT user_id, username, admin_access, contributor_access, viewer_access FROM users WHERE admin_access = 1';
+usersRouter.get('/allData', (_req: any, res: any) => {
+    const sql = 'SELECT user_id, username, admin_access, contributor_access, viewer_access FROM users';
 
     db.all(sql, [], (err: any, rows: any) => {
         if (err) {
@@ -95,7 +95,7 @@ usersRouter.get('/adminsData', (_req: any, res: any) => {
 
         // Count the number of users with admin_access: 1
 
-        let details = { admins: rows };
+        let details = { data: rows };
         res.json(details);
     });
 })

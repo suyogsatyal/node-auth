@@ -1,4 +1,4 @@
-import { useEffect, useContext } from 'react';
+import { useEffect, useContext, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { AuthContext } from '../components/Context';
 import { ApiResponse } from '../../../utils/interface';
@@ -9,6 +9,7 @@ function Dashboard() {
     const apiURL = import.meta.env.VITE_APP_API_BASE_URL;
     const reloginApiURL = apiURL + '/relogin';
     const dashboardDataURL = apiURL + '/dashboard';
+    const [dashboardData, setDashboardData] = useState<any>([{}])
     const navigate = useNavigate();
     const userContext = useContext(AuthContext);
     // const user = userContext.currentUser;
@@ -36,7 +37,8 @@ function Dashboard() {
     async function AdminValidation() {
         try {
             const adminResponse = await axiosInstance.post<ApiResponse>(dashboardDataURL)
-            console.log(adminResponse.data.data)
+            // const ;
+            setDashboardData(adminResponse.data.data)
         }
         catch (error) {
             console.error(error)
@@ -53,6 +55,7 @@ function Dashboard() {
             <Navbar></Navbar>
             <div className="container pt-28">
                 <div className='text-center lato text-5xl'>Dashboard</div>
+                <div>{dashboardData && <div>{dashboardData[1].username}</div>}</div>
             </div>
         </>
     )
