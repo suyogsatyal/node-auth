@@ -51,4 +51,3 @@ Folder Structure of the project so far
     ├── interface.ts
     └── schema.ts
 ```
->>>>>>> dad0a82 (minor changes)
