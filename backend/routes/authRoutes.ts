@@ -170,17 +170,30 @@ authRouter.post('/relogin', authenticateToken, async (_req: any, res: any) => {
         const userDetailURL = backendURL + '/user/' + decoded.username;
         const userResponse = await axios.get(userDetailURL);
         const userDetails = userResponse.data.data;
-        if (userResponse.data.success) {
+        if (userDetails) {
             const successResponse: ApiResponse = {
                 success: true,
                 status: 200,
                 data: userDetails
             };
+            console.log('success')
             return res.status(successResponse.status).json(successResponse);
         }
     }
     catch (error: any) {
         console.error(error);
+        if (axios.isAxiosError(error)) {
+            // Handle Axios-specific errors
+            // You can access error.response for more details
+        } else {
+            console.error(error);
+            const errorResponse: ApiResponse = {
+                success: false,
+                status: 500,
+                message: 'Internal Server Error'
+            };
+            return res.status(errorResponse.status).json(errorResponse);
+        }
         const errorResponse: ApiResponse = {
             success: false,
             status: 500,

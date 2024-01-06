@@ -31,7 +31,7 @@ function Settings() {
   }
   useEffect(() => {
     handleRelogin();
-  },)
+  },[])
 
   return (
     <>

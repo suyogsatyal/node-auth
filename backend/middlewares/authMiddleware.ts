@@ -5,7 +5,9 @@ const backendURL = process.env.REACT_APP_BACKEND_URL;
 const axios = require('axios');
 
 const authenticateToken = async (req: any, res: any, next: any) => {
-    const token = req.headers.authorization && req.headers.authorization;
+    console.log(`Middleware invoked for ${req.method} ${req.url}`);
+    const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
+    // console.log(token);
     if (!token) {
         const errorResponse: ApiResponse = {
             success: false,
@@ -17,6 +19,7 @@ const authenticateToken = async (req: any, res: any, next: any) => {
     }
     try {
         const decoded = jwt.decode(token);
+        console.log(decoded.username);
         if (!decoded || !decoded.username) {
             throw new Error('Invalid token');
         }
