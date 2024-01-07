@@ -9,7 +9,7 @@ function Dashboard() {
     const apiURL = import.meta.env.VITE_APP_API_BASE_URL;
     const reloginApiURL = apiURL + '/relogin';
     const dashboardDataURL = apiURL + '/dashboard';
-    const [dashboardData, setDashboardData] = useState<any>([{}])
+    const [dashboardData, setDashboardData] = useState([{}])
     const navigate = useNavigate();
     const userContext = useContext(AuthContext);
     // const user = userContext.currentUser;
@@ -46,8 +46,9 @@ function Dashboard() {
         }
     }
     useEffect(() => {
-            handleRelogin();
-            AdminValidation();
+        handleRelogin();
+        AdminValidation();
+        console.log(dashboardData)
     },[])
 
     return (
@@ -55,7 +56,7 @@ function Dashboard() {
             <Navbar></Navbar>
             <div className="container pt-28">
                 <div className='text-center lato text-5xl'>Dashboard</div>
-                <div>{dashboardData && <div>{dashboardData[1].username}</div>}</div>
+                {/* <div>{dashboardData && <div>{dashboardData[1].username}</div>}</div> */}
             </div>
         </>
     )

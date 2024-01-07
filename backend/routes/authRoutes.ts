@@ -12,8 +12,7 @@ const jwt = require('jsonwebtoken');
 const jwtSecret = process.env.JWT_SECRET;
 const backendURL = process.env.REACT_APP_BACKEND_URL;
 
-const authenticateToken = require('../middlewares/authMiddleware')
-const authenticateAdmin = require('../middlewares/authMiddleware')
+const {authenticateToken, authenticateAdmin} = require('../middlewares/authMiddleware')
 
 authRouter.post('/signup', async (req: any, res: any) => {
     console.log("try")
@@ -129,7 +128,7 @@ authRouter.post('/login', async (req: any, res: any) => {
 
 })
 
-authRouter.post('/dashboard', authenticateToken, async (req: any, res: any) => {
+authRouter.post('/dashboard', authenticateAdmin, async (req: any, res: any) => {
     try {
         const decoded = res.locals.user;
 
@@ -164,12 +163,13 @@ authRouter.post('/dashboard', authenticateToken, async (req: any, res: any) => {
     }
 })
 
-authRouter.post('/relogin', authenticateToken, async (_req: any, res: any) => {
+authRouter.post('/relogin', authenticateToken, async (req: any, res: any) => {
     try {
         const decoded = res.locals.user;
         const userDetailURL = backendURL + '/user/' + decoded.username;
         const userResponse = await axios.get(userDetailURL);
         const userDetails = userResponse.data.data;
+        // console.log(userDetails)
         if (userDetails) {
             const successResponse: ApiResponse = {
                 success: true,
