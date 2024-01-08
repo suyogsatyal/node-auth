@@ -27,12 +27,18 @@ export interface UsersTable {
     about: string | null;
 }
 
-export interface DashboardDataFormat {
+export interface UserDataFormat {
     userID: number;
     username: string;
-    adminAccess: number;
-    contributorAccess: number;
-    viewerAccess: number;
+    admin_access: number;
+    contributor_access: number;
+    viewer_access: number;
+}
+
+export interface DashboardDataFormat {
+    admins: UserDataFormat[];
+    contributors: UserDataFormat[];
+    viewers: UserDataFormat[];
 }
 
 export interface ApiResponse<T = any> {

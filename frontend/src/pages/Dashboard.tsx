@@ -4,12 +4,15 @@ import { AuthContext } from '../components/Context';
 import { DashboardDataFormat, ApiResponse } from '../../../utils/interface';
 import Navbar from '../components/Navbar'
 import axiosInstance from '../components/AxiosInstance';
+import axios from 'axios';
 
 function Dashboard() {
     const apiURL = import.meta.env.VITE_APP_API_BASE_URL;
     const reloginApiURL = apiURL + '/relogin';
     const dashboardDataURL = apiURL + '/dashboard';
-    const [dashboardData, setDashboardData] = useState<DashboardDataFormat[]>([]);
+    const dashboardAllEntryURL = apiURL + '/allEntryData';
+    const [dashboardData, setDashboardData] = useState<DashboardDataFormat>();
+    const [entryData, setEntryData] = useState();
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const userContext = useContext(AuthContext);
@@ -24,7 +27,7 @@ function Dashboard() {
             if (response.data.success) {
                 userContext.setCurrentUser(response.data.data)
             } else {
-                localStorage.removeItem('token');
+                // localStorage.removeItem('token');
                 navigate('/login');
             }
         }
@@ -37,9 +40,11 @@ function Dashboard() {
 
     async function AdminValidation() {
         try {
-            const adminResponse = await axiosInstance.post<ApiResponse>(dashboardDataURL)
+            const adminResponse = await axiosInstance.post<ApiResponse>(dashboardDataURL);
+            const allEntryResponse = await axios.get<ApiResponse>(dashboardAllEntryURL);
             console.log(adminResponse);
             setDashboardData(adminResponse.data.data)
+            setEntryData(allEntryResponse.data.data)
         }
         catch (error) {
             navigate('/settings');
@@ -71,7 +76,18 @@ function Dashboard() {
             <Navbar></Navbar>
             <div className="container pt-28">
                 <div className='text-center lato text-5xl'>Dashboard</div>
-                <div>{<div>{dashboardData[1].username}</div>}</div>
+
+                <div className='dashboardDetails'>
+                    <section className='stats mx-auto w-full lg:w-8/12'>
+                        <ul className='flex w-full items-center justify-around py-5'>
+                            <li className=' text-center lato text-base md:text-xl font-bold bg-slate-950 p-2 md:p-5 lg:p-6 rounded-md'>Admins <br />{dashboardData && <div className=' text-2xl'>{dashboardData.admins.length}</div>}</li>
+                            <li className=' text-center lato text-base md:text-xl font-bold bg-slate-950 p-2 md:p-5 lg:p-6 rounded-md'>Contributors <br />{dashboardData && <div className=' text-2xl'>{dashboardData.contributors.length}</div>}</li>
+                            <li className=' text-center lato text-base md:text-xl font-bold bg-slate-950 p-2 md:p-5 lg:p-6 rounded-md'>Viewers <br />{dashboardData && <div className=' text-2xl'>{dashboardData.viewers.length}</div>}</li>
+                            <li className=' text-center lato text-base md:text-xl font-bold bg-slate-950 p-2 md:p-5 lg:p-6 rounded-md'>Entries <br />{dashboardData && <div className=' text-2xl'>{entryData.length}</div>}</li>
+                        </ul>
+                    </section>
+                    <div>{dashboardData && <div>{dashboardData.viewers[0].username}</div>}</div>
+                </div>
             </div>
         </>
     )

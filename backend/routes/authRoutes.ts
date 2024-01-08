@@ -1,7 +1,6 @@
 const express = require("express");
 const authRouter = express.Router();
-import { error } from "console";
-import { LoginFormData, ApiResponse, User } from "../../utils/interface";
+import { UserDataFormat, DashboardDataFormat, LoginFormData, ApiResponse, User } from "../../utils/interface";
 const axios = require("axios");
 const sqlite3 = require("sqlite3");
 const path = require("path");
@@ -16,6 +15,26 @@ const {
     authenticateToken,
     authenticateAdmin,
 } = require("../middlewares/authMiddleware");
+
+const organizeUserData = (rawUserData: UserDataFormat[]): DashboardDataFormat => {
+    return rawUserData.reduce(
+        (acc: DashboardDataFormat, user: UserDataFormat) => {
+            if (user.admin_access == 1) {
+                acc.admins.push(user);
+                console.log('adminPush');
+            } else if (user.contributor_access == 1) {
+                acc.contributors.push(user);
+                console.log('contribPush');
+            } else if (user.viewer_access == 1) {
+                acc.viewers.push(user);
+                console.log('viewerPush');
+            }
+            return acc;
+        },
+        { admins: [], contributors: [], viewers: [] } as DashboardDataFormat
+    );
+};
+
 
 authRouter.post("/signup", async (req: any, res: any) => {
     console.log("try");
@@ -151,11 +170,11 @@ authRouter.post("/login", async (req: any, res: any) => {
 
 authRouter.post("/dashboard", authenticateAdmin, async (req: any, res: any) => {
     try {
-        const decoded = res.locals.user;
-        const response = await axios.get(backendURL + "/allData");
-        const dashboardData = response.data.data;
-        
+        const response = await axios.get(backendURL + "/allUsersData");
+        const rawDashboardData = response.data.data;
+        console.log(rawDashboardData);
 
+        const dashboardData = organizeUserData(rawDashboardData)
         console.log(dashboardData);
         const successResponse: ApiResponse = {
             success: true,
@@ -174,6 +193,7 @@ authRouter.post("/dashboard", authenticateAdmin, async (req: any, res: any) => {
     }
 });
 
+
 authRouter.post("/relogin", authenticateToken, async (req: any, res: any) => {
     try {
         const decoded = res.locals.user;
@@ -187,7 +207,7 @@ authRouter.post("/relogin", authenticateToken, async (req: any, res: any) => {
                 status: 200,
                 data: userDetails,
             };
-            console.log("success");
+            // console.log("success");
             return res.status(successResponse.status).json(successResponse);
         }
     } catch (error: any) {

@@ -85,8 +85,23 @@ usersRouter.get('/user/:uName', (req: any, res: any) => {
     });
 })
 
-usersRouter.get('/allData', (_req: any, res: any) => {
+usersRouter.get('/allUsersData', (_req: any, res: any) => {
     const sql = 'SELECT user_id, username, admin_access, contributor_access, viewer_access FROM users';
+
+    db.all(sql, [], (err: any, rows: any) => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+
+        // Count the number of users with admin_access: 1
+
+        let details = { data: rows };
+        res.json(details);
+    });
+})
+
+usersRouter.get('/allEntryData', (_req: any, res: any) => {
+    const sql = 'SELECT data_id, first_name, middle_name, last_name, email, age FROM user_data';
 
     db.all(sql, [], (err: any, rows: any) => {
         if (err) {
