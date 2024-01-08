@@ -13,6 +13,7 @@ export default function Signup() {
     const navigate = useNavigate();
 
     useEffect(()=>{
+      document.title = 'Signup';
       const jwtToken = localStorage.getItem('token');
       console.log(jwtToken);
 

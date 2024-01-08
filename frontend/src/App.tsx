@@ -29,6 +29,7 @@ function App() {
     }
   }
   useEffect(() => {
+    document.title = 'Home';
       handleRelogin();
   },[])
 

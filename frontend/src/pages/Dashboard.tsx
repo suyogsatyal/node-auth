@@ -57,6 +57,7 @@ function Dashboard() {
     }
 
     useEffect(() => {
+        document.title = 'Admin Dashboard';
         AdminValidation();
         handleRelogin();
         console.log(dashboardData)
@@ -80,10 +81,10 @@ function Dashboard() {
                 <div className='dashboardDetails'>
                     <section className='stats mx-auto w-full lg:w-8/12'>
                         <ul className='flex w-full items-center justify-around py-5'>
-                            <li className=' text-center lato text-base md:text-xl font-bold bg-slate-950 p-2 md:p-5 lg:p-6 rounded-md'>Admins <br />{dashboardData && <div className=' text-2xl'>{dashboardData.admins.length}</div>}</li>
-                            <li className=' text-center lato text-base md:text-xl font-bold bg-slate-950 p-2 md:p-5 lg:p-6 rounded-md'>Contributors <br />{dashboardData && <div className=' text-2xl'>{dashboardData.contributors.length}</div>}</li>
-                            <li className=' text-center lato text-base md:text-xl font-bold bg-slate-950 p-2 md:p-5 lg:p-6 rounded-md'>Viewers <br />{dashboardData && <div className=' text-2xl'>{dashboardData.viewers.length}</div>}</li>
-                            <li className=' text-center lato text-base md:text-xl font-bold bg-slate-950 p-2 md:p-5 lg:p-6 rounded-md'>Entries <br />{dashboardData && <div className=' text-2xl'>{entryData.length}</div>}</li>
+                            <li className=' text-center lato text-gray-300 hover:text-gray-100 text-base md:text-xl font-bold bg-slate-800 border-4 border-slate-800 hover:bg-slate-900  cursor-pointer p-2 md:p-5 lg:p-6 rounded-md'>Admins <br />{dashboardData && <div className=' text-2xl'>{dashboardData.admins.length}</div>}</li>
+                            <li className=' text-center lato text-gray-300 hover:text-gray-100 text-base md:text-xl font-bold bg-slate-800 border-4 border-slate-800 hover:bg-slate-900  cursor-pointer p-2 md:p-5 lg:p-6 rounded-md'>Contributors <br />{dashboardData && <div className=' text-2xl'>{dashboardData.contributors.length}</div>}</li>
+                            <li className=' text-center lato text-gray-300 hover:text-gray-100 text-base md:text-xl font-bold bg-slate-800 border-4 border-slate-800 hover:bg-slate-900  cursor-pointer p-2 md:p-5 lg:p-6 rounded-md'>Viewers <br />{dashboardData && <div className=' text-2xl'>{dashboardData.viewers.length}</div>}</li>
+                            <li className=' text-center lato text-gray-300 hover:text-gray-100 text-base md:text-xl font-bold bg-slate-800 border-4 border-slate-800 hover:bg-slate-900  cursor-pointer p-2 md:p-5 lg:p-6 rounded-md'>Entries <br />{dashboardData && <div className=' text-2xl'>{entryData.length}</div>}</li>
                         </ul>
                     </section>
                     <div>{dashboardData && <div>{dashboardData.viewers[0].username}</div>}</div>

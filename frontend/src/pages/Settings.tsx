@@ -30,6 +30,7 @@ function Settings() {
     }
   }
   useEffect(() => {
+    document.title = 'Setting';
     handleRelogin();
   }, [])
 
