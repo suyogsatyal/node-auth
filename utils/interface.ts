@@ -11,7 +11,7 @@ export interface SignupFormData {
 
 export interface AuthContextType {
     currentUser: UsersTable | null;
-    setCurrentUser: React.Dispatch<React.SetStateAction<UsersTable|null>>;
+    setCurrentUser: React.Dispatch<React.SetStateAction<UsersTable | null>>;
 }
 
 export interface User {
@@ -27,9 +27,17 @@ export interface UsersTable {
     about: string | null;
 }
 
+export interface DashboardDataFormat {
+    userID: number;
+    username: string;
+    adminAccess: number;
+    contributorAccess: number;
+    viewerAccess: number;
+}
+
 export interface ApiResponse<T = any> {
     success: boolean;
     status: number;
     message?: string;
     data?: T;
-  }
+}

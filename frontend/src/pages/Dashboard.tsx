@@ -1,7 +1,7 @@
 import { useEffect, useContext, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { AuthContext } from '../components/Context';
-import { ApiResponse } from '../../../utils/interface';
+import { DashboardDataFormat, ApiResponse } from '../../../utils/interface';
 import Navbar from '../components/Navbar'
 import axiosInstance from '../components/AxiosInstance';
 
@@ -9,7 +9,8 @@ function Dashboard() {
     const apiURL = import.meta.env.VITE_APP_API_BASE_URL;
     const reloginApiURL = apiURL + '/relogin';
     const dashboardDataURL = apiURL + '/dashboard';
-    const [dashboardData, setDashboardData] = useState([{}])
+    const [dashboardData, setDashboardData] = useState<DashboardDataFormat[]>([]);
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const userContext = useContext(AuthContext);
     // const user = userContext.currentUser;
@@ -37,26 +38,40 @@ function Dashboard() {
     async function AdminValidation() {
         try {
             const adminResponse = await axiosInstance.post<ApiResponse>(dashboardDataURL)
-            // const ;
+            console.log(adminResponse);
             setDashboardData(adminResponse.data.data)
         }
         catch (error) {
-            console.error(error)
             navigate('/settings');
+            setLoading(false)
+            console.error(error)
+        }
+        finally {
+            setLoading(false)
         }
     }
+
     useEffect(() => {
-        handleRelogin();
         AdminValidation();
+        handleRelogin();
         console.log(dashboardData)
-    },[])
+    }, [])
+
+    if (loading) {
+        return (
+            <>
+                {/* <Navbar></Navbar> */}
+                Loading
+            </>
+        )
+    }
 
     return (
         <>
             <Navbar></Navbar>
             <div className="container pt-28">
                 <div className='text-center lato text-5xl'>Dashboard</div>
-                {/* <div>{dashboardData && <div>{dashboardData[1].username}</div>}</div> */}
+                <div>{<div>{dashboardData[1].username}</div>}</div>
             </div>
         </>
     )

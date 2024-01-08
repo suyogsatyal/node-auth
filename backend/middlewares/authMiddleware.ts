@@ -55,6 +55,15 @@ const authenticateAdmin = async (req: any, res: any, next: any) => {
         if (!decoded || !decoded.username) {
             throw new Error('Invalid token');
         }
+        else if(!decoded.isAdmin){
+            const errorResponse: ApiResponse = {
+                        success: false,
+                        status: 401,
+                        message: 'Unauthorized Access to Admin Only Endpoints',
+                    };
+                    console.error(errorResponse);
+                    return res.status(errorResponse.status).json(errorResponse);
+        }
         else if (decoded.isAdmin) {
             res.locals.user = decoded;
             next();
