@@ -28,7 +28,7 @@ export interface UsersTable {
 }
 
 export interface UserDataFormat {
-    userID: number;
+    user_id: number;
     username: string;
     admin_access: number;
     contributor_access: number;
