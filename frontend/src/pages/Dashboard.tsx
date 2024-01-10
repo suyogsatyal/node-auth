@@ -4,6 +4,7 @@ import { AuthContext } from '../components/Context';
 import { DashboardDataFormat, ApiResponse } from '../../../utils/interface';
 import Navbar from '../components/Navbar'
 import EditIcon from '../components/assets/edit.svg'
+import ActiveEditIcon from '../components/assets/editActive.svg'
 import axiosInstance from '../components/AxiosInstance';
 import axios from 'axios';
 
@@ -20,8 +21,6 @@ function Dashboard() {
     // const user = userContext.currentUser;
 
     async function handleRelogin() {
-        // const token = { token: jwtToken }
-
         try {
             const response = await axiosInstance.post<ApiResponse>(reloginApiURL)
 
@@ -43,7 +42,6 @@ function Dashboard() {
         try {
             const adminResponse = await axiosInstance.post<ApiResponse>(dashboardDataURL);
             const allEntryResponse = await axios.get<ApiResponse>(dashboardAllEntryURL);
-            console.log(adminResponse);
             setDashboardData(adminResponse.data.data)
             setEntryData(allEntryResponse.data.data)
         }
@@ -61,7 +59,6 @@ function Dashboard() {
         document.title = 'Admin Dashboard';
         AdminValidation();
         handleRelogin();
-        console.log(dashboardData)
     }, [])
 
     if (loading) {
@@ -125,7 +122,10 @@ function Dashboard() {
                                     return (
                                         <li key={index} className='grid grid-cols-8 md:grid-cols-10  py-2 divide-x-2 group hover:bg-gray-700 divide-solid divide-gray-500 border-y-2 border-gray-500'>
                                             <div className='block group-hover:hidden'>{index+1}</div>
-                                            <div className='hidden justify-center group-hover:flex'><img src={EditIcon} alt="" className='w-[25px] hover:stroke-gray-100 hover:fill-gray-100' /></div>
+                                            <div className='hidden justify-center group-hover:flex'>
+                                                <img src={EditIcon} alt="" className='w-[25px] cursor-pointer block hover:hidden absolute' onClick={()=>{navigate(`/editaccess/${contributor.user_id}`)}}/>
+                                                <img src={ActiveEditIcon} alt="" className='w-[25px] cursor-pointer opacity-0 hover:opacity-100 absolute' onClick={()=>{navigate(`/editaccess/${contributor.username}`)}} />
+                                            </div>
                                             <div className=''>{contributor.user_id}</div>
                                             <div className='col-span-3 md:col-span-4'>{contributor.username}</div>
                                             <div className=''>{contributor.admin_access}</div>
@@ -146,7 +146,10 @@ function Dashboard() {
                                     return (
                                         <li key={index} className='grid grid-cols-8 md:grid-cols-10  py-2 divide-x-2 group hover:bg-gray-700 divide-solid divide-gray-500 border-y-2 border-gray-500'>
                                             <div className='block group-hover:hidden'>{index+1}</div>
-                                            <div className='hidden justify-center group-hover:flex'><img src={EditIcon} alt="" className='w-[25px]' /></div>
+                                            <div className='hidden justify-center group-hover:flex relative'>
+                                                <img src={EditIcon} alt="" className='w-[25px] cursor-pointer block hover:hidden absolute' />
+                                                <img src={ActiveEditIcon} alt="" className='w-[25px] cursor-pointer opacity-0 hover:opacity-100 absolute' onClick={()=>{navigate(`/editaccess/${viewer.username}`)}} />
+                                            </div>
                                             <div className=''>{viewer.user_id}</div>
                                             <div className='col-span-3 md:col-span-4'>{viewer.username}</div>
                                             <div className=''>{viewer.admin_access}</div>
