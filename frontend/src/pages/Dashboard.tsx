@@ -76,9 +76,9 @@ function Dashboard() {
             <div className="container pt-28">
                 <div className='text-center lato text-5xl'>Dashboard</div>
 
-                <div className='dashboardDetails'>
+                <div className='dashboardDetails overflow-x-hidden no-scrollbar sm:overflow-x-scroll'>
                     <section className='stats mx-auto w-full lg:w-8/12'>
-                        <ul className='flex w-full items-center justify-around py-5'>
+                        <ul className='flex w-full items-center justify-around py-5 no-scrollbar'>
                             <li className=' text-center lato text-gray-300 hover:text-gray-100 text-base md:text-xl font-bold bg-slate-800 border-4 border-slate-800 hover:bg-slate-900  cursor-pointer p-1 sm:p-2 md:p-5 lg:p-6 rounded-md'>Admins <br />{dashboardData && <div className=' text-2xl'>{dashboardData.admins.length}</div>}</li>
                             <li className=' text-center lato text-gray-300 hover:text-gray-100 text-base md:text-xl font-bold bg-slate-800 border-4 border-slate-800 hover:bg-slate-900  cursor-pointer p-1 sm:p-2 md:p-5 lg:p-6 rounded-md'>Contributors <br />{dashboardData && <div className=' text-2xl'>{dashboardData.contributors.length}</div>}</li>
                             <li className=' text-center lato text-gray-300 hover:text-gray-100 text-base md:text-xl font-bold bg-slate-800 border-4 border-slate-800 hover:bg-slate-900  cursor-pointer p-1 sm:p-2 md:p-5 lg:p-6 rounded-md'>Viewers <br />{dashboardData && <div className=' text-2xl'>{dashboardData.viewers.length}</div>}</li>
@@ -89,7 +89,7 @@ function Dashboard() {
                     <div className='adminSection py-4'>
                         <div className='text-left lato text-3xl'>{dashboardData?.admins.length} Admins</div>
                         <div className='flex flex-col items-center justify-center'>
-                            <ul className='bg-gray-600 w-[768px] md:w-full text-center lato text-xl overflow-scroll divide-2 divide-solid divide-gray-500'>
+                            <ul className='bg-gray-600 w-[768px] md:w-full text-center lato text-xl overflow-scroll divide-2 divide-solid divide-gray-500 no-scrollbar'>
                                 <li className='grid grid-cols-8 md:grid-cols-10 py-2 divide-x-2 divide-solid divide-gray-500 border-y-2 bg-gray-700 border-gray-500'>
                                     <div className=''>No.</div>
                                     <div className=''>ID</div>
@@ -117,7 +117,7 @@ function Dashboard() {
                     <div className='contributorSection py-4'>
                         <div className='text-left lato text-3xl'>{dashboardData?.contributors.length} Contributors</div>
                         <div className='flex flex-col items-center justify-center'>
-                            <ul className='bg-gray-600 w-[768px] md:w-full text-center lato text-xl overflow-scroll divide-2 divide-solid divide-gray-500'>
+                            <ul className='bg-gray-600 w-[768px] md:w-full text-center lato text-xl overflow-scroll divide-2 divide-solid divide-gray-500 no-scrollbar'>
                                 {dashboardData && dashboardData.contributors.map((contributor, index) => {
                                     return (
                                         <li key={index} className='grid grid-cols-8 md:grid-cols-10  py-2 divide-x-2 group hover:bg-gray-700 divide-solid divide-gray-500 border-y-2 border-gray-500'>
@@ -141,7 +141,7 @@ function Dashboard() {
                     <div className='viewerSection py-4'>
                         <div className='text-left lato text-3xl'>{dashboardData?.viewers.length} Viewers</div>
                         <div className='flex flex-col items-center justify-center'>
-                            <ul className='bg-gray-600 w-[768px] md:w-full text-center lato text-xl overflow-scroll divide-2 divide-solid divide-gray-500'>
+                            <ul className='bg-gray-600 w-[768px] md:w-full text-center lato text-xl overflow-scroll divide-2 divide-solid divide-gray-500 no-scrollbar'>
                                 {dashboardData && dashboardData.viewers.map((viewer, index) => {
                                     return (
                                         <li key={index} className='grid grid-cols-8 md:grid-cols-10  py-2 divide-x-2 group hover:bg-gray-700 divide-solid divide-gray-500 border-y-2 border-gray-500'>
