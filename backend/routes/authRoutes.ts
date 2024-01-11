@@ -28,10 +28,12 @@ const organizeUserData = (rawUserData: UserDataFormat[]): DashboardDataFormat =>
             } else if (user.viewer_access == 1) {
                 acc.viewers.push(user);
                 console.log('viewerPush');
+            } else{
+                acc.inactive.push(user);
             }
             return acc;
         },
-        { admins: [], contributors: [], viewers: [] } as DashboardDataFormat
+        { admins: [], contributors: [], viewers: [], inactive: [] } as DashboardDataFormat
     );
 };
 
@@ -141,6 +143,15 @@ authRouter.post("/login", async (req: any, res: any) => {
                 isContributor,
                 isViewer,
             };
+            if(!isViewer){
+                const errorResponse: ApiResponse = {
+                    success: false,
+                    status: 403,
+                    message: "User has been deactivated. Please contact Admin.",
+                };
+                console.log(errorResponse);
+                return res.status(errorResponse.status).json(errorResponse);
+            }
             const token = jwt.sign(tokenData, jwtSecret, { expiresIn: "1h" });
             const successResponse: ApiResponse = {
                 success: true,

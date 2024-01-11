@@ -86,8 +86,7 @@ function Dashboard() {
                         </ul>
                     </section>
 
-                    <div className='adminSection py-4'>
-                        <div className='text-left lato text-3xl'>{dashboardData?.admins.length} Admins</div>
+                    <div className='adminSection pt-4'>
                         <div className='flex flex-col items-center justify-center'>
                             <ul className='bg-gray-600 w-[768px] md:w-full text-center lato text-xl overflow-scroll divide-2 divide-solid divide-gray-500 no-scrollbar'>
                                 <li className='grid grid-cols-8 md:grid-cols-10 py-2 divide-x-2 divide-solid divide-gray-500 border-y-2 bg-gray-700 border-gray-500'>
@@ -114,8 +113,7 @@ function Dashboard() {
                         </div>
                     </div>
 
-                    <div className='contributorSection py-4'>
-                        <div className='text-left lato text-3xl'>{dashboardData?.contributors.length} Contributors</div>
+                    <div className='contributorSection'>
                         <div className='flex flex-col items-center justify-center'>
                             <ul className='bg-gray-600 w-[768px] md:w-full text-center lato text-xl overflow-scroll divide-2 divide-solid divide-gray-500 no-scrollbar'>
                                 {dashboardData && dashboardData.contributors.map((contributor, index) => {
@@ -138,11 +136,33 @@ function Dashboard() {
                         </div>
                     </div>
 
-                    <div className='viewerSection py-4'>
-                        <div className='text-left lato text-3xl'>{dashboardData?.viewers.length} Viewers</div>
+                    <div className='viewerSection'>
                         <div className='flex flex-col items-center justify-center'>
                             <ul className='bg-gray-600 w-[768px] md:w-full text-center lato text-xl overflow-scroll divide-2 divide-solid divide-gray-500 no-scrollbar'>
                                 {dashboardData && dashboardData.viewers.map((viewer, index) => {
+                                    return (
+                                        <li key={index} className='grid grid-cols-8 md:grid-cols-10  py-2 divide-x-2 group hover:bg-gray-700 divide-solid divide-gray-500 border-y-2 border-gray-500'>
+                                            <div className='block group-hover:hidden'>{index+1}</div>
+                                            <div className='hidden justify-center group-hover:flex relative'>
+                                                <img src={EditIcon} alt="" className='w-[25px] cursor-pointer block hover:hidden absolute' />
+                                                <img src={ActiveEditIcon} alt="" className='w-[25px] cursor-pointer opacity-0 hover:opacity-100 absolute' onClick={()=>{navigate(`/editaccess/${viewer.username}`)}} />
+                                            </div>
+                                            <div className=''>{viewer.user_id}</div>
+                                            <div className='col-span-3 md:col-span-4'>{viewer.username}</div>
+                                            <div className=''>{viewer.admin_access}</div>
+                                            <div className='col-span-1 md:col-span-2'>{viewer.contributor_access}</div>
+                                            <div className=''>{viewer.viewer_access}</div>
+                                        </li>
+                                    )
+                                })}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div className='inactiveSection'>
+                        <div className='flex flex-col items-center justify-center'>
+                            <ul className='bg-gray-600 w-[768px] md:w-full text-center lato text-xl overflow-scroll divide-2 divide-solid divide-gray-500 no-scrollbar'>
+                                {dashboardData && dashboardData.inactive.map((viewer, index) => {
                                     return (
                                         <li key={index} className='grid grid-cols-8 md:grid-cols-10  py-2 divide-x-2 group hover:bg-gray-700 divide-solid divide-gray-500 border-y-2 border-gray-500'>
                                             <div className='block group-hover:hidden'>{index+1}</div>

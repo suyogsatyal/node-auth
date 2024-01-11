@@ -39,6 +39,7 @@ export interface DashboardDataFormat {
     admins: UserDataFormat[];
     contributors: UserDataFormat[];
     viewers: UserDataFormat[];
+    inactive: UserDataFormat[];
 }
 
 export interface ApiResponse<T = any> {
