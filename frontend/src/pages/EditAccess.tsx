@@ -94,6 +94,10 @@ function EditAccess() {
         setLoading(false);
     }, [])
 
+    useEffect(() => {
+        console.log(newAccess)
+    }, [newAccess])
+
     if (loading) {
         return (
             <>
@@ -116,12 +120,12 @@ function EditAccess() {
                             <p className='lato text-xl sm:text-2xl'>Are you sure you want to change the access <br /> for <span className='capitalize font-extrabold'>{username}</span> from <span className='capitalize'>{access}</span> to <span className='capitalize'>{newAccess}</span>?</p>
                         </div>
                         <div className='confirmation-footer flex flex-row gap-5 justify-center py-2'>
-                            <button className='inline-flex cursor-pointer items-center gap-1 rounded border border-slate-300 bg-gradient-to-b from-slate-400 to-slate-500 px-4 py-2 font-semibold hover:opacity-90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-300 focus-visible:ring-offset-2 active:opacity-100' onClick={()=>{ setOpenConfirmation(false)}}>Cancel</button>
-                            <button className='inline-flex cursor-pointer items-center gap-1 rounded border border-slate-300 bg-gradient-to-b from-green-800 to-green-700 px-4 py-2 font-semibold hover:opacity-90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-300 focus-visible:ring-offset-2 active:opacity-100' onClick={() => { console.log({access: true}) }}>Confirm</button>
+                            <button className='inline-flex cursor-pointer items-center gap-1 rounded border border-slate-300 bg-gradient-to-b from-slate-400 to-slate-500 px-4 py-2 font-semibold hover:opacity-90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-300 focus-visible:ring-offset-2 active:opacity-100' onClick={() => { setOpenConfirmation(false) }}>Cancel</button>
+                            <button className='inline-flex cursor-pointer items-center gap-1 rounded border border-slate-300 bg-gradient-to-b from-green-800 to-green-700 px-4 py-2 font-semibold hover:opacity-90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-300 focus-visible:ring-offset-2 active:opacity-100' onClick={() => { console.log({ access: true }) }}>Confirm</button>
                         </div>
                     </div>
                 </div>
-                <div className='confirmation-overlay absolute w-full h-full bg-gray-800 opacity-90 z-10' onClick={()=>{ setOpenConfirmation(false)}}>
+                <div className='confirmation-overlay absolute w-full h-full bg-gray-800 opacity-90 z-10' onClick={() => { setOpenConfirmation(false) }}>
                 </div>
             </div>
 
@@ -129,28 +133,28 @@ function EditAccess() {
                 <h1 className='lato text-center text-3xl sm:text-5xl'>Edit Access for {username}</h1>
                 <h2 className='lato text-center text-2xl sm:text-xl'>Current Access: <span className=' capitalize'>{access && access}</span></h2>
                 <div className="flex justify-center py-8">
-                    <Formik initialValues={{ access: { access } }} onSubmit={values => { setNewAccess(values.picked);console.log({ access: (values.picked) }); setOpenConfirmation(true)}}>
+                    <Formik initialValues={{ access: { access } }} onSubmit={values => { setNewAccess(values.picked); console.log({ access: (values.picked) }); setOpenConfirmation(true) }}>
                         <Form>
                             <label className='label'>
-                                <Field type="radio" name="picked" value="admin" className='radio-input' />
+                                <Field type="radio" name="picked" value="admin" className='radio-input' onClick={() => { setNewAccess('admin') }} />
                                 <div className="radio-design"></div>
                                 <div className='label-text lato capitalize'>Admin</div>
                             </label>
 
                             <label className='label'>
-                                <Field type="radio" name="picked" value="contributor" className='radio-input' />
+                                <Field type="radio" name="picked" value="contributor" className='radio-input' onClick={() => { setNewAccess('contributor') }} />
                                 <div className="radio-design"></div>
                                 <div className='label-text lato capitalize'>Contributor</div>
                             </label>
 
                             <label className='label'>
-                                <Field type="radio" name="picked" value="viewer" className='radio-input' />
+                                <Field type="radio" name="picked" value="viewer" className='radio-input' onClick={() => { setNewAccess('viewer') }} />
                                 <div className="radio-design"></div>
                                 <div className='label-text lato capitalize' >Viewer</div>
                             </label>
 
                             <label className='label'>
-                                <Field type="radio" name="picked" value="inactive" className='radio-input' />
+                                <Field type="radio" name="picked" value="inactive" className='radio-input' onClick={() => { setNewAccess('inactive') }} />
                                 <div className="radio-design"></div>
                                 <div className='label-text lato capitalize'>Inactive</div>
                             </label>
@@ -161,6 +165,7 @@ function EditAccess() {
                         </Form>
                     </Formik>
                 </div>
+                <div className='finalMessage text-center'></div>
             </div>
         </>
     )
