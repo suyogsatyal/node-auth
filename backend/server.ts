@@ -1,10 +1,8 @@
-
 const express = require('express');
 
 const dotenv = require('dotenv')
 
 const cors = require('cors')
-
 
 const app = express();
 
@@ -16,10 +14,11 @@ app.use(express.json());
 
 import usersRouter from './routes/usersRoutes';
 import authRouter from './routes/authRoutes'
+import adminRouter from './routes/adminRoutes'
 
 app.use(usersRouter);
 app.use(authRouter);
-
+app.use(adminRouter);
 
 
 app.listen(3000);//
