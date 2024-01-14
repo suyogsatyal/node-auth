@@ -1,5 +1,6 @@
 const express = require("express");
 const authRouter = express.Router();
+import { error } from "console";
 import { UserDataFormat, DashboardDataFormat, LoginFormData, ApiResponse, User } from "../../utils/interface";
 const axios = require("axios");
 const sqlite3 = require("sqlite3");
@@ -28,7 +29,7 @@ const organizeUserData = (rawUserData: UserDataFormat[]): DashboardDataFormat =>
             } else if (user.viewer_access == 1) {
                 acc.viewers.push(user);
                 console.log('viewerPush');
-            } else{
+            } else {
                 acc.inactive.push(user);
             }
             return acc;
@@ -36,7 +37,6 @@ const organizeUserData = (rawUserData: UserDataFormat[]): DashboardDataFormat =>
         { admins: [], contributors: [], viewers: [], inactive: [] } as DashboardDataFormat
     );
 };
-
 
 authRouter.post("/signup", async (req: any, res: any) => {
     console.log("try");
@@ -143,7 +143,7 @@ authRouter.post("/login", async (req: any, res: any) => {
                 isContributor,
                 isViewer,
             };
-            if(!isViewer){
+            if (!isViewer) {
                 const errorResponse: ApiResponse = {
                     success: false,
                     status: 403,
@@ -204,6 +204,56 @@ authRouter.post("/dashboard", authenticateAdmin, async (req: any, res: any) => {
     }
 });
 
+authRouter.post("/editAccess", authenticateAdmin, async (req: any, res: any) => {
+    try {
+        let adminAccess = 0;
+        let contributorAccess = 0;
+        let viewerAccess = 0;
+        const data = req.body;
+        console.log(data);
+        
+        if (data.newAccess === 'admin') {
+            adminAccess = 1;
+            contributorAccess = 1;
+            viewerAccess = 1;
+        } else if (data.newAccess === 'contributor') {
+            contributorAccess = 1;
+            viewerAccess = 1;
+        } else if (data.newAccess === 'viewer') {
+            viewerAccess = 1;
+        }
+        // console.log(params)
+        const params = [adminAccess, contributorAccess, viewerAccess, data.username]
+        const editAccessSQL = "UPDATE users SET admin_access = ?, contributor_access = ?, viewer_access = ? WHERE username = '?'"
+
+        db.run(editAccessSQL, params, function (this:any, error:any){
+            if(error){
+                console.error(error);
+                const errorResponse: ApiResponse = {
+                    success: false,
+                    status: 500,
+                    message: "Internal Server Error",
+                };
+                return res.status(errorResponse.status).json(errorResponse);
+            }
+            const successResponse: ApiResponse = {
+                success: true,
+                status: 201,
+                message: `User ${data.username} access changed to ${data.newAccess} successfully.`,
+            };
+            return res.status(successResponse.status).json(successResponse);
+        })
+    }
+    catch (error: any) {
+        console.log("error");
+        const errorResponse: ApiResponse = {
+            success: false,
+            status: 500,
+            message: "Internal Server Error",
+        };
+        return res.status(errorResponse.status).json(errorResponse);
+    }
+});
 
 authRouter.post("/relogin", authenticateToken, async (req: any, res: any) => {
     try {

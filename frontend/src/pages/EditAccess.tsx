@@ -48,7 +48,7 @@ function EditAccess() {
         try {
             const response = await axiosInstance.post<ApiResponse>(editAccessURL, {
                 username: username,
-                access: access
+                newAccess: newAccess
             })
             if (response.data.success) {
                 navigate('/dashboard');
@@ -121,7 +121,7 @@ function EditAccess() {
                         </div>
                         <div className='confirmation-footer flex flex-row gap-5 justify-center py-2'>
                             <button className='inline-flex cursor-pointer items-center gap-1 rounded border border-slate-300 bg-gradient-to-b from-slate-400 to-slate-500 px-4 py-2 font-semibold hover:opacity-90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-300 focus-visible:ring-offset-2 active:opacity-100' onClick={() => { setOpenConfirmation(false) }}>Cancel</button>
-                            <button className='inline-flex cursor-pointer items-center gap-1 rounded border border-slate-300 bg-gradient-to-b from-green-800 to-green-700 px-4 py-2 font-semibold hover:opacity-90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-300 focus-visible:ring-offset-2 active:opacity-100' onClick={() => { console.log({ access: true }) }}>Confirm</button>
+                            <button className='inline-flex cursor-pointer items-center gap-1 rounded border border-slate-300 bg-gradient-to-b from-green-800 to-green-700 px-4 py-2 font-semibold hover:opacity-90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-300 focus-visible:ring-offset-2 active:opacity-100' onClick={() => { handleNewAcccessRequest() ;console.log({ access: true }) }}>Confirm</button>
                         </div>
                     </div>
                 </div>
@@ -160,7 +160,7 @@ function EditAccess() {
                             </label>
                             <div className='flex flex-row gap-4 py-4'>
                                 <button type="button" className='inline-flex cursor-pointer items-center gap-1 rounded border border-slate-300 bg-gradient-to-b from-slate-400 to-slate-500 px-4 py-2 font-semibold hover:opacity-90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-300 focus-visible:ring-offset-2 active:opacity-100' onClick={() => { navigate('/dashboard') }}>Cancel</button>
-                                <button type="submit" className='inline-flex cursor-pointer items-center gap-1 rounded border border-slate-300 bg-gradient-to-b from-green-800 to-green-700 px-4 py-2 font-semibold hover:opacity-90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-300 focus-visible:ring-offset-2 active:opacity-100'>Confirm</button>
+                                <button type="submit" className={`inline-flex items-center gap-1 rounded border border-slate-300 bg-gradient-to-b from-green-800 to-green-700 px-4 py-2 font-semibold hover:opacity-90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-300 focus-visible:ring-offset-2 active:opacity-100` + ((access === newAccess)? ` cursor-not-allowed`: ` cursor-pointer`)} disabled={access === newAccess}>Confirm</button>
                             </div>
                         </Form>
                     </Formik>
