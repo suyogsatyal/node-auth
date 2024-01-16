@@ -97,6 +97,9 @@ function Dashboard() {
                                     <div className='col-span-1 md:col-span-2'>Contributor</div>
                                     <div className=''>Viewer</div>
                                 </li>
+                                <li className='flex justify-center md:grid-cols-10 py-2 divide-x-2 text-center divide-solid divide-gray-500 border-y-2 bg-gray-700 border-gray-500'>
+                                    Admins
+                                </li>
                                 {dashboardData && dashboardData.admins.map((admin, index) => {
                                     return (
                                         <li key={index} className='grid grid-cols-8 md:grid-cols-10  py-2 divide-x-2 group hover:bg-gray-700 divide-solid divide-gray-500 border-y-2 border-gray-500'>
@@ -116,6 +119,9 @@ function Dashboard() {
                     <div className='contributorSection'>
                         <div className='flex flex-col items-center justify-center'>
                             <ul className='bg-gray-600 w-[768px] md:w-full text-center lato text-xl overflow-scroll divide-2 divide-solid divide-gray-500 no-scrollbar'>
+                            <li className='flex justify-center md:grid-cols-10 py-2 divide-x-2 text-center divide-solid divide-gray-500 border-y-2 bg-gray-700 border-gray-500'>
+                                    Contributors
+                                </li>
                                 {dashboardData && dashboardData.contributors.map((contributor, index) => {
                                     return (
                                         <li key={index} className='grid grid-cols-8 md:grid-cols-10  py-2 divide-x-2 group hover:bg-gray-700 divide-solid divide-gray-500 border-y-2 border-gray-500'>
@@ -139,6 +145,9 @@ function Dashboard() {
                     <div className='viewerSection'>
                         <div className='flex flex-col items-center justify-center'>
                             <ul className='bg-gray-600 w-[768px] md:w-full text-center lato text-xl overflow-scroll divide-2 divide-solid divide-gray-500 no-scrollbar'>
+                            <li className='flex justify-center md:grid-cols-10 py-2 divide-x-2 text-center divide-solid divide-gray-500 border-y-2 bg-gray-700 border-gray-500'>
+                                    Viewers
+                                </li>
                                 {dashboardData && dashboardData.viewers.map((viewer, index) => {
                                     return (
                                         <li key={index} className='grid grid-cols-8 md:grid-cols-10  py-2 divide-x-2 group hover:bg-gray-700 divide-solid divide-gray-500 border-y-2 border-gray-500'>
@@ -162,6 +171,9 @@ function Dashboard() {
                     <div className='inactiveSection'>
                         <div className='flex flex-col items-center justify-center'>
                             <ul className='bg-gray-600 w-[768px] md:w-full text-center lato text-xl overflow-scroll divide-2 divide-solid divide-gray-500 no-scrollbar'>
+                            <li className='flex justify-center md:grid-cols-10 py-2 divide-x-2 text-center divide-solid divide-gray-500 border-y-2 bg-gray-700 border-gray-500'>
+                                    Inactive Accounts
+                                </li>
                                 {dashboardData && dashboardData.inactive.map((viewer, index) => {
                                     return (
                                         <li key={index} className='grid grid-cols-8 md:grid-cols-10  py-2 divide-x-2 group hover:bg-gray-700 divide-solid divide-gray-500 border-y-2 border-gray-500'>
