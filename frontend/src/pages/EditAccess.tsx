@@ -16,11 +16,13 @@ function EditAccess() {
     const currentUserDataURL = apiURL + '/user/' + `${username}`;
     const editAccessURL = apiURL + '/editAccess';
     const [access, setAccess] = useState('');
+    const [message, setMessage] = useState<string>('');
     const [newAccess, setNewAccess] = useState('');
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const userContext = useContext(AuthContext);
     const [openConfirmation, setOpenConfirmation] = useState(false);
+    let timeout = 1000;
 
     async function handleRelogin() {
         try {
@@ -51,7 +53,19 @@ function EditAccess() {
                 newAccess: newAccess
             })
             if (response.data.success) {
-                navigate('/dashboard');
+                if((username == userContext.currentUser.username) &&(newAccess != "admin")){
+                    setMessage(`Changed your access to ${newAccess} successfully.` );
+                    setTimeout(() => {
+                        localStorage.removeItem('token');
+                        navigate('/login');
+                    }, timeout);
+                }
+                else{
+                    setMessage(`Changed ${username} to ${newAccess} successfully.` );
+                    setTimeout(() => {
+                        navigate('/dashboard');
+                    }, timeout);
+                }
             }
         }
         catch (error) {
@@ -88,6 +102,7 @@ function EditAccess() {
 
     useEffect(() => {
         // document.title = 'Admin Dashboard';
+        console.log(username == userContext.currentUser.username)
         setLoading(true);
         FetchCurrentData();
         handleRelogin();
@@ -95,8 +110,8 @@ function EditAccess() {
     }, [])
 
     useEffect(() => {
-        console.log(newAccess)
-    }, [newAccess])
+        console.log(message)
+    }, [message])
 
     if (loading) {
         return (
@@ -119,6 +134,9 @@ function EditAccess() {
                         <div className='confirmation-body py-2'>
                             <p className='lato text-xl sm:text-2xl'>Are you sure you want to change the access <br /> for <span className='capitalize font-extrabold'>{username}</span> from <span className='capitalize'>{access}</span> to <span className='capitalize'>{newAccess}</span>?</p>
                         </div>
+                        <div className='finalMessage'>
+                            {message && message}
+                        </div>
                         <div className='confirmation-footer flex flex-row gap-5 justify-center py-2'>
                             <button className='inline-flex cursor-pointer items-center gap-1 rounded border border-slate-300 bg-gradient-to-b from-slate-400 to-slate-500 px-4 py-2 font-semibold hover:opacity-90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-300 focus-visible:ring-offset-2 active:opacity-100' onClick={() => { setOpenConfirmation(false) }}>Cancel</button>
                             <button className='inline-flex cursor-pointer items-center gap-1 rounded border border-slate-300 bg-gradient-to-b from-green-800 to-green-700 px-4 py-2 font-semibold hover:opacity-90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-300 focus-visible:ring-offset-2 active:opacity-100' onClick={() => { handleNewAcccessRequest() ;console.log({ access: true }) }}>Confirm</button>
@@ -136,25 +154,25 @@ function EditAccess() {
                     <Formik initialValues={{ access: { access } }} onSubmit={values => { setNewAccess(values.picked); console.log({ access: (values.picked) }); setOpenConfirmation(true) }}>
                         <Form>
                             <label className='label'>
-                                <Field type="radio" name="picked" value="admin" className='radio-input' onClick={() => { setNewAccess('admin') }} />
+                                <Field type="radio" name="picked" value="admin" className='radio-input' onClick={() => { setMessage('');setNewAccess('admin') }} />
                                 <div className="radio-design"></div>
                                 <div className='label-text lato capitalize'>Admin</div>
                             </label>
 
                             <label className='label'>
-                                <Field type="radio" name="picked" value="contributor" className='radio-input' onClick={() => { setNewAccess('contributor') }} />
+                                <Field type="radio" name="picked" value="contributor" className='radio-input' onClick={() => { setMessage('');setNewAccess('contributor') }} />
                                 <div className="radio-design"></div>
                                 <div className='label-text lato capitalize'>Contributor</div>
                             </label>
 
                             <label className='label'>
-                                <Field type="radio" name="picked" value="viewer" className='radio-input' onClick={() => { setNewAccess('viewer') }} />
+                                <Field type="radio" name="picked" value="viewer" className='radio-input' onClick={() => { setMessage('');setNewAccess('viewer') }} />
                                 <div className="radio-design"></div>
                                 <div className='label-text lato capitalize' >Viewer</div>
                             </label>
 
                             <label className='label'>
-                                <Field type="radio" name="picked" value="inactive" className='radio-input' onClick={() => { setNewAccess('inactive') }} />
+                                <Field type="radio" name="picked" value="inactive" className='radio-input' onClick={() => { setMessage('');setNewAccess('inactive') }} />
                                 <div className="radio-design"></div>
                                 <div className='label-text lato capitalize'>Inactive</div>
                             </label>

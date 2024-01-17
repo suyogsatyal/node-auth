@@ -103,7 +103,21 @@ function Dashboard() {
                                 {dashboardData && dashboardData.admins.map((admin, index) => {
                                     return (
                                         <li key={index} className='grid grid-cols-8 md:grid-cols-10  py-2 divide-x-2 group hover:bg-gray-700 divide-solid divide-gray-500 border-y-2 border-gray-500'>
-                                            <div className=''>{index+1}</div>
+                                            {
+                                                userContext.currentUser.username === admin.username ? (
+                                                    // <div className='block group-hover:hidden'>{index + 1}</div>
+                                                    <div className='justify-center flex relative'>
+                                                        <div className='block group-hover:hidden'>{index + 1}</div>
+                                                        <div className='hidden group-hover:flex justify-center'>
+                                                        <img src={EditIcon} alt="" className='w-[25px] cursor-pointer block hover:hidden absolute' onClick={() => { navigate(`/editaccess/${admin.user_id}`) }} />
+                                                        <img src={ActiveEditIcon} alt="" className='w-[25px] cursor-pointer opacity-0 hover:opacity-100 absolute' onClick={() => { navigate(`/editaccess/${admin.username}`) }}/>
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <div className=''>{index + 1}</div>
+                                                )
+                                            }
+
                                             <div className=''>{admin.user_id}</div>
                                             <div className='col-span-3 md:col-span-4'>{admin.username}</div>
                                             <div className=''>{admin.admin_access}</div>
@@ -119,16 +133,16 @@ function Dashboard() {
                     <div className='contributorSection'>
                         <div className='flex flex-col items-center justify-center'>
                             <ul className='bg-gray-600 w-[768px] md:w-full text-center lato text-xl overflow-scroll divide-2 divide-solid divide-gray-500 no-scrollbar'>
-                            <li className='flex justify-center md:grid-cols-10 py-2 divide-x-2 text-center divide-solid divide-gray-500 border-y-2 bg-gray-700 border-gray-500'>
+                                <li className='flex justify-center md:grid-cols-10 py-2 divide-x-2 text-center divide-solid divide-gray-500 border-y-2 bg-gray-700 border-gray-500'>
                                     Contributors
                                 </li>
                                 {dashboardData && dashboardData.contributors.map((contributor, index) => {
                                     return (
                                         <li key={index} className='grid grid-cols-8 md:grid-cols-10  py-2 divide-x-2 group hover:bg-gray-700 divide-solid divide-gray-500 border-y-2 border-gray-500'>
-                                            <div className='block group-hover:hidden'>{index+1}</div>
+                                            <div className='block group-hover:hidden'>{index + 1}</div>
                                             <div className='hidden justify-center group-hover:flex'>
-                                                <img src={EditIcon} alt="" className='w-[25px] cursor-pointer block hover:hidden absolute' onClick={()=>{navigate(`/editaccess/${contributor.user_id}`)}}/>
-                                                <img src={ActiveEditIcon} alt="" className='w-[25px] cursor-pointer opacity-0 hover:opacity-100 absolute' onClick={()=>{navigate(`/editaccess/${contributor.username}`)}} />
+                                                <img src={EditIcon} alt="" className='w-[25px] cursor-pointer block hover:hidden absolute' onClick={() => { navigate(`/editaccess/${contributor.user_id}`) }} />
+                                                <img src={ActiveEditIcon} alt="" className='w-[25px] cursor-pointer opacity-0 hover:opacity-100 absolute' onClick={() => { navigate(`/editaccess/${contributor.username}`) }} />
                                             </div>
                                             <div className=''>{contributor.user_id}</div>
                                             <div className='col-span-3 md:col-span-4'>{contributor.username}</div>
@@ -145,16 +159,16 @@ function Dashboard() {
                     <div className='viewerSection'>
                         <div className='flex flex-col items-center justify-center'>
                             <ul className='bg-gray-600 w-[768px] md:w-full text-center lato text-xl overflow-scroll divide-2 divide-solid divide-gray-500 no-scrollbar'>
-                            <li className='flex justify-center md:grid-cols-10 py-2 divide-x-2 text-center divide-solid divide-gray-500 border-y-2 bg-gray-700 border-gray-500'>
+                                <li className='flex justify-center md:grid-cols-10 py-2 divide-x-2 text-center divide-solid divide-gray-500 border-y-2 bg-gray-700 border-gray-500'>
                                     Viewers
                                 </li>
                                 {dashboardData && dashboardData.viewers.map((viewer, index) => {
                                     return (
                                         <li key={index} className='grid grid-cols-8 md:grid-cols-10  py-2 divide-x-2 group hover:bg-gray-700 divide-solid divide-gray-500 border-y-2 border-gray-500'>
-                                            <div className='block group-hover:hidden'>{index+1}</div>
+                                            <div className='block group-hover:hidden'>{index + 1}</div>
                                             <div className='hidden justify-center group-hover:flex relative'>
                                                 <img src={EditIcon} alt="" className='w-[25px] cursor-pointer block hover:hidden absolute' />
-                                                <img src={ActiveEditIcon} alt="" className='w-[25px] cursor-pointer opacity-0 hover:opacity-100 absolute' onClick={()=>{navigate(`/editaccess/${viewer.username}`)}} />
+                                                <img src={ActiveEditIcon} alt="" className='w-[25px] cursor-pointer opacity-0 hover:opacity-100 absolute' onClick={() => { navigate(`/editaccess/${viewer.username}`) }} />
                                             </div>
                                             <div className=''>{viewer.user_id}</div>
                                             <div className='col-span-3 md:col-span-4'>{viewer.username}</div>
@@ -171,16 +185,16 @@ function Dashboard() {
                     <div className='inactiveSection'>
                         <div className='flex flex-col items-center justify-center'>
                             <ul className='bg-gray-600 w-[768px] md:w-full text-center lato text-xl overflow-scroll divide-2 divide-solid divide-gray-500 no-scrollbar'>
-                            <li className='flex justify-center md:grid-cols-10 py-2 divide-x-2 text-center divide-solid divide-gray-500 border-y-2 bg-gray-700 border-gray-500'>
+                                <li className='flex justify-center md:grid-cols-10 py-2 divide-x-2 text-center divide-solid divide-gray-500 border-y-2 bg-gray-700 border-gray-500'>
                                     Inactive Accounts
                                 </li>
                                 {dashboardData && dashboardData.inactive.map((viewer, index) => {
                                     return (
                                         <li key={index} className='grid grid-cols-8 md:grid-cols-10  py-2 divide-x-2 group hover:bg-gray-700 divide-solid divide-gray-500 border-y-2 border-gray-500'>
-                                            <div className='block group-hover:hidden'>{index+1}</div>
+                                            <div className='block group-hover:hidden'>{index + 1}</div>
                                             <div className='hidden justify-center group-hover:flex relative'>
                                                 <img src={EditIcon} alt="" className='w-[25px] cursor-pointer block hover:hidden absolute' />
-                                                <img src={ActiveEditIcon} alt="" className='w-[25px] cursor-pointer opacity-0 hover:opacity-100 absolute' onClick={()=>{navigate(`/editaccess/${viewer.username}`)}} />
+                                                <img src={ActiveEditIcon} alt="" className='w-[25px] cursor-pointer opacity-0 hover:opacity-100 absolute' onClick={() => { navigate(`/editaccess/${viewer.username}`) }} />
                                             </div>
                                             <div className=''>{viewer.user_id}</div>
                                             <div className='col-span-3 md:col-span-4'>{viewer.username}</div>
@@ -194,7 +208,7 @@ function Dashboard() {
                         </div>
                     </div>
 
-                    
+
                 </div>
             </div>
         </>
