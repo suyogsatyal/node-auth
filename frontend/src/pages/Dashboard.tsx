@@ -14,6 +14,10 @@ function Dashboard() {
     const dashboardDataURL = apiURL + '/dashboard';
     const dashboardAllEntryURL = apiURL + '/allEntryData';
     const [dashboardData, setDashboardData] = useState<DashboardDataFormat>();
+    const [fullAdmin, setFullAdmin] = useState<boolean>(true);
+    const [fullContributor, setFullContributor] = useState<boolean>(true);
+    const [fullViewer, setFullViewer] = useState<boolean>(true);
+    const [fullInactive, setFullInactive] = useState<boolean>(true);
     const [entryData, setEntryData] = useState();
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
@@ -130,10 +134,10 @@ function Dashboard() {
                         </div>
                     </div>
 
-                    <div className='contributorSection'>
+                    <div className='contributorSection max-h-[44px] overflow-y-hidden'>
                         <div className='flex flex-col items-center justify-center'>
                             <ul className='bg-gray-600 w-[768px] md:w-full text-center lato text-xl overflow-scroll divide-2 divide-solid divide-gray-500 no-scrollbar'>
-                                <li className='flex justify-center md:grid-cols-10 py-2 divide-x-2 text-center divide-solid divide-gray-500 border-y-2 bg-gray-700 border-gray-500'>
+                                <li className='flex justify-center md:grid-cols-10 py-2 divide-x-2 text-center divide-solid divide-gray-500 border-y-2 bg-gray-700 border-gray-500' onClick={()=>{ console.log("admin")}}>
                                     Contributors
                                 </li>
                                 {dashboardData && dashboardData.contributors.map((contributor, index) => {
